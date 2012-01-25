@@ -188,6 +188,9 @@ CheckoutController.class_eval do
         fire_event('spree.checkout.coupon_code_added', :coupon_code => @order.coupon_code)
       end
     end
+    @order.line_items = @order.line_items.select {|li| li.quantity > 0 }
+    fire_event('spree.order.contents_changed') 
+    
     load_order
     payment_method = PaymentMethod.find(params[:order][:payments_attributes].first[:payment_method_id])
 
